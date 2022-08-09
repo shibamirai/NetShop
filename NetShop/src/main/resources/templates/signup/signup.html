@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- CSS読込 -->
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css//signup.css}">
+  <!-- JS読込 -->
+  <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<head>
+<meta charset="UTF-8">
+<title>会員登録フォーム</title>
+</head>
+<body>
+  <form id="signup-form" method="post" th:action="@{/signup}" class="form-signup" th:object="${signupForm}">
+<div class="p-3 border rounded">
+
+<h2>会員登録フォーム</h2>
+
+<!-- ユーザーID -->
+    <div class="form-group">
+      <label for="userId" th:text="#{userId}"></label>
+        <input type="text" class="form-control" th:value="${signupForm.userId}"  id="userId" name="userId" th:errorclass="is-invalid" />
+      <div class="invalid-feedback" th:errors="*{userId}"></div>
+    </div>
+    <!-- パスワード -->
+    <div class="form-group">
+      <label for="password" th:text="#{password}"></label>
+      <input type="text" class="form-control" th:value="${signupForm.password}" th:field="*{password}" th:errorclass="is-invalid"/>
+      <div class="invalid-feedback" th:errors="*{password}"></div>
+    </div>
+    <!-- 苗字 -->
+    <div class="form-group">
+      <label for="familyName" th:text="#{familyName}"></label>
+      <input type="text" class="form-control" th:value="${signupForm.familyName}" th:field="*{familyName}" th:errorclass="is-invalid"/>
+      <div class="invalid-feedback" th:errors="*{familyName}"></div>
+    </div>
+      <!-- 名前 -->
+    <div class="form-group">
+      <label for="firstName" th:text="#{firstName}"></label>
+      <input type="text" class="form-control" th:value="${signupForm.firstName}" th:field="*{firstName}" th:errorclass="is-invalid"/>
+      <div class="invalid-feedback" th:errors="*{firstName}"></div>
+    </div>
+    <!-- 生年月日 -->
+    <div class="form-group">
+      <label for="birthday" th:text="#{birthday}"></label>
+       <input type="text" class="form-control"  th:value="${#dates.format(signupForm.birthday, 'YYYY/MM/dd')} "  id="birthday" name="birthday" th:errorclass="is-invalid" >
+      <div class="invalid-feedback" th:errors="*{birthday}"></div>
+    </div>
+
+    <!-- 性別 -->
+    <div class="form-group">
+      <div th:each="item : ${genderMap}" class="form-check-inline">
+        <input type="radio" class="form-check-input" th:value="${item.value}" th:field="*{gender}"/>
+        <label class="form-check-label" th:text="${item.key}"></label>
+      </div>
+      <div class="text-danger" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
+    </div>
+
+    <!-- 電話番号 -->
+	 <div class="form-group">
+        <label for="phoneNumber" th:text="#{phoneNumber}"></label>
+        <input type="text" class="form-control" th:value="${signupForm.phoneNumber}"  id="phoneNumber" name="phoneNumber" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+     </div>
+
+<!-- 郵便番号 -->
+<div class="form-group">
+        <label for="postalCoder" th:text="#{postalCoder}"></label>
+        <input type="text" class="form-control" th:value="${signupForm.postalCoder}"  id="postalCoder" name="postalCoder" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{postalCoder}"></div>
+     </div>
+
+<!-- 都道府県 -->
+<div class="form-group">
+		<label for="prefectures" th:text="#{prefectures}"></label>
+		<select class="form-control" id="prefectures" name="prefectures" >
+			 <option th:each="item : ${list}" th:value="${item}"  th:selected="${item == signupForm.prefectures }" th:inline="text">[[${item}]]</option>
+
+		</select>
+</div>
+
+<!-- 市区町村 -->
+<div class="form-group">
+        <label for="municipalities" th:text="#{municipalities}"></label>
+        <input type="text" class="form-control" th:value="${signupForm.postalCoder}"  id="municipalities" name="municipalities" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{municipalities}"></div>
+     </div>
+
+<!-- 丁目  番地  号 -->
+<div class="form-group">
+        <label for="number" th:text="#{number}"></label>
+        <input type="text" class="form-control" th:value="${signupForm.postalCoder}"  id="number" name="number" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{number}"></div>
+     </div>
+    <!-- 登録ボタン -->
+   <button type="submit"  name="submit" class="btn btn-light btn-outline-dark">登録</button>
+
+</div>
+  </form>
+</body>
+</html>

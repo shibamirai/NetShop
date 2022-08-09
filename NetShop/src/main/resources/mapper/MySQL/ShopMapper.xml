@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Mapperとxmlのマッピング -->
+<mapper namespace="katachi.spring.exercise.repository.ShopMapper">
+
+	<!-- マッピング定義(商品) -->
+	<resultMap
+		type="katachi.spring.exercise.domain.user.model.MItem" id="item">
+		<id column="id" property="id" />
+		<result column="item_name" property="itemName" />
+		<result column="item_image" property="itemImage" />
+		<result column="item_price" property="itemPrice" />
+		<result column="item_description" property="itemDescription" />
+		<result column="is_deleted" property="isDeleted" />
+		<result column="create_date_time" property="createDateTime" />
+		<result column="update_date_time" property="updateDateTime" />
+		<association property="inventory" resultMap="inventory" />
+	</resultMap>
+
+	<!-- マッピング定義(在庫数) -->
+	<resultMap
+		type="katachi.spring.exercise.domain.user.model.Inventory"
+		id="inventory">
+		<id column="item_id" property="itemId" />
+		<result column="inventory" property="inventory" />
+	</resultMap>
+
+
+<!-- 商品一覧を取得 -->
+  <select id="findMany"  resultMap="item">
+	select
+		items.id
+		, items.item_name
+		, items.item_image
+		, items.item_price
+		, items.item_description
+		, inventory.inventory
+	from
+  		items
+  	join
+  		inventory
+  	on
+  		items.id = inventory.item_id
+	where
+		items.is_deleted = 0
+  </select>
+
+  <!-- 商品取得(1件) -->
+  <select id="itemOne"  resultMap="item">
+select
+		items.id
+		, items.item_name
+		, items.item_image
+		, items.item_price
+		, items.item_description
+		, inventory.inventory
+	from
+  		items
+  	join
+  		inventory
+  	on
+  		items.id = inventory.item_id
+	where
+		items.is_deleted = 0
+	and
+		items.id = #{id}
+  </select>
+
+ <!-- 在庫数更新(1件) -->
+ <update id="updateOne" >
+ 	update
+		inventory
+	set
+	inventory = #{itemInventory}
+    where
+    	item_id = #{id}
+
+ </update>
+
+
+ <!-- 在庫数取得(1件) -->
+  <select id="inventoryOne"  resultType="Integer">
+  select
+	inventory
+	from
+		inventory
+	where
+		item_id = #{id}
+  </select>
+
+   <!-- カートの中の商品取得(1件) -->
+   <select id="cartItemOne" resultType="CartItem">
+   select
+		items.id
+		, items.item_name
+		, items.item_image
+		, items.item_price
+	from
+  		items
+	where
+		items.is_deleted = 0
+	and
+		items.id = #{id}
+   </select>
+
+
+
+</mapper>

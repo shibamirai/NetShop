@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- CSS読込 -->
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+
+<!-- JS読込 -->
+<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<title>カート商品確認</title>
+</head>
+<body class="bg-light">
+	<div class="container-md">
+
+		<div class="m-3">カートの中の商品一覧です。</div>
+		<a th:text="購入画面へ" th:href="@{/list/addressForm}"></a>
+		<!-- 合計金額 -->
+		<div th:text=" '合計金額は' + ${money} + '円です。' "></div>
+
+		<div class="mt-3" th:each="item: ${cart.itemList}">
+
+			<form id="item-add-form" method="post" th:action="@{/list/cartItem}"
+				class="form-input" th:object="${itemAddForm}">
+
+				<a th:href="@{'/list/details/' + ${item.id}}"><img alt=""
+					th:src="${item.itemImage}"
+					th:href="@{'/list/details/' + ${item.id}}"></a>
+				<a th:text="${item.itemName}"
+					th:href="@{'/list/details/' + ${item.id}}"></a>
+
+				<div th:text="${item.itemPrice} + '円' "></div>
+
+				<div th:text="${item.cartItemInventory} + '個' "></div>
+
+				<input type="hidden" id="itemId" name="id" th:value="${item.id}">
+				<label></label> <input type="number" class="form-control col-4 mb-2"
+					id="cartItemInventory" name="cartItemInventory"
+					th:errorclass="is-invalid" />
+				<div class="invalid-feedback" th:errors="*{cartItemInventory}"></div>
+
+				<button type="submit" name="change"
+					class="btn btn-light btn-outline-dark">数量変更</button>
+				<button type="submit" name="deleted"
+					class="btn btn-light btn-outline-dark">削除</button>
+
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

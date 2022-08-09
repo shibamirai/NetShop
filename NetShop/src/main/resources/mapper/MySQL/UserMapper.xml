@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Mapperとxmlのマッピング -->
+<mapper namespace="katachi.spring.exercise.repository.UserMapper">
+
+  <!-- マッピング定義(ユーザー) -->
+    <resultMap type="katachi.spring.exercise.domain.user.model.MUser" id="user">
+    <result column="user_id" property="userId" />
+    <result column="pass" property="password"/>
+    <result column="family_name" property="familyName" />
+    <result column="first_name" property="firstName" />
+    <result column="birthday" property="birthday" />
+    <result column="gender" property="gender" />
+    <result column="phone_number" property="phoneNumber" />
+    <result column="postal_coder" property="postalCoder" />
+    <result column="prefectures" property="prefectures" />
+    <result column="municipalities" property="municipalities" />
+    <result column="number" property="number" />
+
+    </resultMap>
+
+    <!-- マッピング定義(住所) -->
+    <resultMap type="katachi.spring.exercise.domain.user.model.MUser" id="address">
+    <id column="user_id" property="userId" />
+    <result column="postal_coder" property="postalCoder" />
+    <result column="prefectures" property="prefectures" />
+    <result column="municipalities" property="municipalities" />
+    <result column="number" property="number" />
+    </resultMap>
+
+ <!-- ユーザー1件登録 -->
+  <insert id="insertOne">
+    insert into users(
+        user_id
+      , pass
+      , family_name
+      , first_name
+      , birthday
+      , gender
+      , phone_number
+    )
+    values (
+        #{userId}
+      , #{password}
+      , #{familyName}
+      , #{firstName}
+      , #{birthday}
+      , #{gender}
+      , #{phoneNumber}
+    )
+  </insert>
+
+  <!-- 住所1件登録 -->
+  <insert id="insertAddressOne">
+   insert into address(
+   user_id
+      , postal_coder
+      , prefectures
+      , municipalities
+      , number
+    )
+    values (
+    #{userId}
+	  , #{postalCoder}
+      , #{prefectures}
+      , #{municipalities}
+      , #{number}
+    )
+  </insert>
+
+ <select id="findLoginUser"  resultMap="user">
+	select
+		 users.*
+		 , address.postal_coder
+		 , address.prefectures
+		 , address.municipalities
+		 , address.number
+	from
+		users
+	join
+		address
+	on
+  		users.user_id =address.user_id
+	where
+		users.user_id = #{username}
+
+</select>
+
+   <!-- 登録ユーザーID重複チェック) -->
+   <select id="userIdOne" resultType="String">
+   select
+		user_id
+	from
+  		users
+	where
+		user_id = #{userId}
+   </select>
+
+   </mapper>

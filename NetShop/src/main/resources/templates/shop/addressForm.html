@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <meta charset="UTF-8"></meta>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- CSS読込 -->
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+      <link rel="stylesheet" th:href="@{/css/addressForm.css}">
+
+  <!-- JS読込 -->
+  <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<title>住所入力</title>
+</head>
+<body>
+<form id="address-form" method="post" th:action="@{/list/addressForm}" class="form-address" th:object="${addressForm}">
+
+<div class="p-3 border rounded">
+
+<h2>住所入力フォーム</h2>
+
+<!-- 氏名 -->
+    <div class="form-group">
+        <label for="name" th:text="#{name}"></label>
+        <input type="text" class="form-control"  th:value="${addressForm.name}"  id="name" name="name" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{name}"></div>
+     </div>
+
+<!-- 電話番号 -->
+	 <div class="form-group">
+        <label for="phoneNumber" th:text="#{phoneNumber}"></label>
+        <input type="text" class="form-control" th:value="${addressForm.phoneNumber}"  id="phoneNumber" name="phoneNumber" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+     </div>
+
+<!-- 郵便番号 -->
+<div class="form-group">
+        <label for="postalCoder" th:text="#{postalCoder}"></label>
+        <input type="text" class="form-control" th:value="${addressForm.postalCoder}"  id="postalCoder" name="postalCoder" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{postalCoder}"></div>
+     </div>
+
+<!-- 都道府県 -->
+<div class="form-group">
+		<label for="prefectures" th:text="#{prefectures}"></label>
+		<select class="form-control" id="prefectures" name="prefectures" >
+			 <option th:each="item : ${list}" th:value="${item}"  th:selected="${item == addressForm.prefectures }" th:inline="text">[[${item}]]</option>
+
+		</select>
+</div>
+
+<!-- 市区町村 -->
+<div class="form-group">
+        <label for="municipalities" th:text="#{municipalities}"></label>
+        <input type="text" class="form-control" th:value="${addressForm.postalCoder}"  id="municipalities" name="municipalities" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{municipalities}"></div>
+     </div>
+
+<!-- 丁目  番地  号 -->
+<div class="form-group">
+        <label for="number" th:text="#{number}"></label>
+        <input type="text" class="form-control" th:value="${addressForm.postalCoder}"  id="number" name="number" th:errorclass="is-invalid" />
+        <div class="invalid-feedback" th:errors="*{number}"></div>
+     </div>
+
+  <!-- ボタン -->
+   <button type="submit"   class="btn btn-light btn-outline-dark">確認画面へ</button>
+   <a type="submit"  th:href="@{/list/cart}" class="btn btn-light btn-outline-dark">カートの中へ戻る</a>
+
+      </div>
+</form>
+</body>
+</html>
