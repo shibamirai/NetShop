@@ -11,5 +11,5 @@ public interface UserService {
 	public void insertAddress(MUser user);
 
 	//ユーザーID重複チェック
-	public boolean userIdOne(String userId);
+	public boolean isRegistered(String userId);
 }

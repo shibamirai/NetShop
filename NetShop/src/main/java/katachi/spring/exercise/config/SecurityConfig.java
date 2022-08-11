@@ -26,13 +26,14 @@ public class SecurityConfig {
 				.usernameParameter("userId")
 				.passwordParameter("password")
 				.defaultSuccessUrl("/list", true)
-				.failureUrl("/login?error")
+				.failureUrl("/")
 				.permitAll()
 		).logout(logout -> logout
 				.logoutSuccessUrl("/")
 		).authorizeHttpRequests(authz -> authz
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.mvcMatchers("/").permitAll()
+				.mvcMatchers("/signup/**").permitAll()
 				.anyRequest().authenticated()
 		);
 		return http.build();

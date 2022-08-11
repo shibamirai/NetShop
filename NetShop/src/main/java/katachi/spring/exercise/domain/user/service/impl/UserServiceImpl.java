@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
 
 	//ユーザーID重複チェック
 	@Override
-	public boolean userIdOne(String userId) {
-		if (mapper.userIdOne(userId) == null) {
+	public boolean isRegistered(String userId) {
+		if (mapper.userIdOne(userId) != null) {
 			return true;
 		} else {
 			return false;
