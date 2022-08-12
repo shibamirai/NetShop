@@ -5,97 +5,52 @@
 <!-- Mapperとxmlのマッピング -->
 <mapper namespace="katachi.spring.exercise.repository.UserMapper">
 
-  <!-- マッピング定義(ユーザー) -->
-    <resultMap type="katachi.spring.exercise.domain.user.model.MUser" id="user">
-    <result column="user_id" property="userId" />
-    <result column="pass" property="password"/>
-    <result column="family_name" property="familyName" />
-    <result column="first_name" property="firstName" />
-    <result column="birthday" property="birthday" />
-    <result column="gender" property="gender" />
-    <result column="phone_number" property="phoneNumber" />
-    <result column="postal_coder" property="postalCoder" />
-    <result column="prefectures" property="prefectures" />
-    <result column="municipalities" property="municipalities" />
-    <result column="number" property="number" />
+	<!-- ログインユーザー検索 -->
+	<select id="findLoginUser"  resultType="LoginUser">
+		select
+			id
+			, email
+			, password
+			, family_name
+			, first_name
+			, role
+		from
+			users
+		where
+			email = #{email}
+	</select>
 
-    </resultMap>
-
-    <!-- マッピング定義(住所) -->
-    <resultMap type="katachi.spring.exercise.domain.user.model.MUser" id="address">
-    <id column="user_id" property="userId" />
-    <result column="postal_coder" property="postalCoder" />
-    <result column="prefectures" property="prefectures" />
-    <result column="municipalities" property="municipalities" />
-    <result column="number" property="number" />
-    </resultMap>
-
- <!-- ユーザー1件登録 -->
-  <insert id="insertOne">
-    insert into users(
-        user_id
-      , pass
-      , family_name
-      , first_name
-      , birthday
-      , gender
-      , phone_number
-    )
-    values (
-        #{userId}
-      , #{password}
-      , #{familyName}
-      , #{firstName}
-      , #{birthday}
-      , #{gender}
-      , #{phoneNumber}
-    )
-  </insert>
-
-  <!-- 住所1件登録 -->
-  <insert id="insertAddressOne">
-   insert into address(
-   user_id
-      , postal_coder
-      , prefectures
-      , municipalities
-      , number
-    )
-    values (
-    #{userId}
-	  , #{postalCoder}
-      , #{prefectures}
-      , #{municipalities}
-      , #{number}
-    )
-  </insert>
-
- <select id="findLoginUser"  resultMap="user">
-	select
-		 users.*
-		 , address.postal_coder
-		 , address.prefectures
-		 , address.municipalities
-		 , address.number
-	from
-		users
-	join
-		address
-	on
-  		users.user_id =address.user_id
-	where
-		users.user_id = #{username}
-
-</select>
-
-   <!-- 登録ユーザーID重複チェック) -->
-   <select id="userIdOne" resultType="String">
-   select
-		user_id
-	from
-  		users
-	where
-		user_id = #{userId}
-   </select>
+	<!-- ユーザー1件登録 -->
+	<insert id="insertOne">
+		insert into users(
+			email
+			, password
+			, family_name
+			, first_name
+			, role
+			, birthday
+			, gender
+			, phone_number
+			, postal_code
+			, address1
+			, address2
+			, address3
+			, address4
+		) values (
+	        #{email}
+			, #{password}
+			, #{familyName}
+			, #{firstName}
+			, #{role}
+			, #{birthday}
+			, #{gender}
+			, #{phoneNumber}
+			, #{postalCode}
+			, #{address1}
+			, #{address2}
+			, #{address3}
+			, #{address4}
+		)
+	</insert>
 
    </mapper>

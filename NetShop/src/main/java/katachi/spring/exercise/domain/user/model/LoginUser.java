@@ -1,71 +1,58 @@
 package katachi.spring.exercise.domain.user.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 
 @Data
-public class MUser implements UserDetails {
-
-	private String userId;
-
-	private String familyName;
-
-	private String firstName;
-
-	private Date birthday;
-
-	private Integer gender;
-
-	private String phoneNumber;
-
-	private String postalCoder;
-	private String prefectures;
-	private String municipalities;
-	private String number;
-
-	private static final long serialVersionUID = 1L;
-	private String user;
+public class LoginUser implements UserDetails {
+	private int id;
+	private String email;
 	private String password;
+	private String familyName;
+	private String firstName;
+	private String role;
 	private Collection<GrantedAuthority> authorities;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO 自動生成されたメソッド・スタブ
+		if (authorities != null) {
+			return authorities;
+		}
+		
+		GrantedAuthority authority = new SimpleGrantedAuthority(role);
+		authorities = new ArrayList<>();
+		authorities.add(authority);
 		return authorities;
 	}
 
 	@Override
 	public String getUsername() {
-		// TODO 自動生成されたメソッド・スタブ
-		return userId;
+		return email;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO 自動生成されたメソッド・スタブ
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO 自動生成されたメソッド・スタブ
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO 自動生成されたメソッド・スタブ
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO 自動生成されたメソッド・スタブ
 		return true;
 	}
 

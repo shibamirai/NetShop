@@ -16,7 +16,7 @@ public class SignupForm {
 
 	@NotBlank
 	@Email
-	private String userId;
+	private String email;
 
 	@NotBlank
 	@Length(min = 4, max = 100)
@@ -35,11 +35,21 @@ public class SignupForm {
 	@NotNull
 	private Integer gender;
 
-	//住所
+	@NotBlank
 	private String phoneNumber;
-	private String postalCoder;
-	private String prefectures;
-	private String municipalities;
-	private String number;
+
+	@NotBlank
+	private String postalCode;
+
+	@NotBlank
+	private String address1;
+
+	@NotBlank
+	private String address2;
+
+	@NotBlank
+	private String address3;
+
+	private String address4;
 
 }

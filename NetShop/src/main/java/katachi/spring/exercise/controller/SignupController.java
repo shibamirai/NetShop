@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import katachi.spring.exercise.application.service.UserApplicationService;
-import katachi.spring.exercise.domain.user.model.MUser;
+import katachi.spring.exercise.domain.user.model.User;
 import katachi.spring.exercise.domain.user.service.UserService;
 import katachi.spring.exercise.form.SignupForm;
 
@@ -39,8 +39,10 @@ public class SignupController {
 	@PostMapping("/signup/confirm")
 	public String postSignup(Model model, Locale locale, @ModelAttribute @Validated SignupForm form,
 			BindingResult bindingResult) {
-		if (userService.isRegistered(form.getUserId())) {
-			bindingResult.rejectValue("userId", "userId.error");
+		
+		// メールアドレス重複チェック
+		if (userService.isRegistered(form.getEmail())) {
+			bindingResult.rejectValue("email", "email.registered");
 		}
 
 		if (bindingResult.hasErrors()) {
@@ -54,7 +56,7 @@ public class SignupController {
 	@PostMapping(value = "/signup", params = "complete")
 	public String postCompletSignup(@ModelAttribute SignupForm form) {
 
-		MUser user = modelMapper.map(form, MUser.class);
+		User user = modelMapper.map(form, User.class);
 
 		//ユーザー登録処理
 		userService.signup(user);

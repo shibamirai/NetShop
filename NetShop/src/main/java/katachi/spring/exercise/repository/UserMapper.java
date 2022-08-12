@@ -1,23 +1,14 @@
 package katachi.spring.exercise.repository;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import katachi.spring.exercise.domain.user.model.MUser;
+import katachi.spring.exercise.domain.user.model.LoginUser;
+import katachi.spring.exercise.domain.user.model.User;
 
 @Mapper
 public interface UserMapper {
 
-	// ユーザー登録
-	public int insertOne(MUser user);
-
-	//住所登録
-	public int insertAddressOne(MUser user);
-
-	//ログインユーザー取得
-	public UserDetails findLoginUser(String username);
-
-	//ユーザーID重複チェック
-	public String userIdOne(String userId);
+	public LoginUser findLoginUser(String email);
+	public int insertOne(User user);
 
 }

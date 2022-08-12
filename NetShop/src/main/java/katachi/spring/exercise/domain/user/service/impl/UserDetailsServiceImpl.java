@@ -6,20 +6,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import katachi.spring.exercise.repository.UserMapper;
+import katachi.spring.exercise.domain.user.service.UserService;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	private UserMapper mapper;
+	private UserService service;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		UserDetails userDetails = mapper.findLoginUser(username);
-		if (userDetails == null) {
-			throw new UsernameNotFoundException("user not found.");
+
+		UserDetails loginUser = service.getLoginUser(username);
+		if (loginUser == null) {
+			throw new UsernameNotFoundException("user not found");
 		}
-		return userDetails;
+
+		return loginUser;
 	}
 }
