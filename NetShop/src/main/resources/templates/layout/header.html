@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec=”http://www.thymeleaf.org/extras/spring-security>
+<body>
+<header id="global-header" layout:fragment="header" class="bg-white sticky-top">
+<div class="container">
+  <div class="row align-middle">
+    <div class="col">
+      <h2>ショッピングサイト</h2>
+    </div>
+    <div sec:authorize="isAuthenticated()" class="col-auto dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          ようこそ<span sec:authentication="principal.fullName"></span>さん
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <form method="post" th:action="@{/logout}">
+              <button class="btn dropdown-item">ログアウト</button>
+            </form>
+        </div>
+    </div>
+  </div>
+</div>
+</header>
+</body>
+</html>

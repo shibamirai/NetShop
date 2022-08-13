@@ -38,12 +38,12 @@ public class ShopController {
 	@GetMapping("/list")
 	public String getitemlist(@ModelAttribute MItem item, Model model) {
 		//商品リストを取得
-		List<MItem> itemList = shopService.findMany();
-		model.addAttribute("itemList", itemList);
-
-		Integer count = cart.count();
-
-		model.addAttribute("count", count);
+//		List<MItem> itemList = shopService.findMany();
+//		model.addAttribute("itemList", itemList);
+//
+//		Integer count = cart.count();
+//
+//		model.addAttribute("count", count);
 
 		return "/shop/list";
 	}

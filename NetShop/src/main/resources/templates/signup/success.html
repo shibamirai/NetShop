@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-  <meta charset="UTF-8"></meta>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- CSS読込 -->
-  <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
-
-  <!-- JS読込 -->
-  <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
-  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<link rel="stylesheet" th:href="@{/css/signup.css}">
 <title>登録完了</title>
 </head>
 <body>
-<div class="m-3 alert alert-success">登録が完了しました！</div>
-<a class="ml-3" href="/">ログイン画面へ</a>
+<div layout:fragment="content">
+	<div class="text-center">
+		<div class="m-3 alert alert-success">登録が完了しました！</div>
+		<a class="ml-3" href="/">ログイン画面へ</a>
+	</div>
+</div>
 </body>
 </html>
