@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import katachi.spring.exercise.domain.user.model.Cart;
-import katachi.spring.exercise.domain.user.model.CartItem;
-import katachi.spring.exercise.domain.user.model.MItem;
-import katachi.spring.exercise.domain.user.service.ShopService;
+import katachi.spring.exercise.domain.model.Cart;
+import katachi.spring.exercise.domain.model.CartItem;
+import katachi.spring.exercise.domain.model.MItem;
+import katachi.spring.exercise.domain.service.ShopService;
 import katachi.spring.exercise.form.AddressForm;
 import katachi.spring.exercise.form.ItemAddForm;
 

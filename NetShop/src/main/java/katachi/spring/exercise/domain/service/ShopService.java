@@ -1,9 +1,9 @@
-package katachi.spring.exercise.domain.user.service;
+package katachi.spring.exercise.domain.service;
 
 import java.util.List;
 
-import katachi.spring.exercise.domain.user.model.CartItem;
-import katachi.spring.exercise.domain.user.model.MItem;
+import katachi.spring.exercise.domain.model.CartItem;
+import katachi.spring.exercise.domain.model.MItem;
 
 public interface ShopService {
 

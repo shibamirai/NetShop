@@ -1,12 +1,12 @@
-package katachi.spring.exercise.domain.user.service.impl;
+package katachi.spring.exercise.domain.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import katachi.spring.exercise.domain.user.model.LoginUser;
-import katachi.spring.exercise.domain.user.model.User;
-import katachi.spring.exercise.domain.user.service.UserService;
+import katachi.spring.exercise.domain.model.LoginUser;
+import katachi.spring.exercise.domain.model.User;
+import katachi.spring.exercise.domain.service.UserService;
 import katachi.spring.exercise.repository.UserMapper;
 
 @Service

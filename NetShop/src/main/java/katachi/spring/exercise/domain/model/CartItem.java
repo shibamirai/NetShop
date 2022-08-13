@@ -1,4 +1,4 @@
-package katachi.spring.exercise.domain.user.model;
+package katachi.spring.exercise.domain.model;
 
 import lombok.Data;
 

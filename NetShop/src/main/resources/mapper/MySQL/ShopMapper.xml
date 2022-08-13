@@ -7,7 +7,7 @@
 
 	<!-- マッピング定義(商品) -->
 	<resultMap
-		type="katachi.spring.exercise.domain.user.model.MItem" id="item">
+		type="katachi.spring.exercise.domain.model.MItem" id="item">
 		<id column="id" property="id" />
 		<result column="item_name" property="itemName" />
 		<result column="item_image" property="itemImage" />
@@ -21,7 +21,7 @@
 
 	<!-- マッピング定義(在庫数) -->
 	<resultMap
-		type="katachi.spring.exercise.domain.user.model.Inventory"
+		type="katachi.spring.exercise.domain.model.Inventory"
 		id="inventory">
 		<id column="item_id" property="itemId" />
 		<result column="inventory" property="inventory" />

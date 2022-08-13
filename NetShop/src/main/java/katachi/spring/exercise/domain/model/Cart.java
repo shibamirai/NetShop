@@ -1,4 +1,4 @@
-package katachi.spring.exercise.domain.user.model;
+package katachi.spring.exercise.domain.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import katachi.spring.exercise.domain.user.service.ShopService;
-import katachi.spring.exercise.domain.user.service.UserService;
+import katachi.spring.exercise.domain.service.ShopService;
+import katachi.spring.exercise.domain.service.UserService;
 import lombok.Data;
 
 @Data

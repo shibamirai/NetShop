@@ -1,13 +1,13 @@
-package katachi.spring.exercise.domain.user.service.impl;
+package katachi.spring.exercise.domain.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import katachi.spring.exercise.domain.user.model.CartItem;
-import katachi.spring.exercise.domain.user.model.MItem;
-import katachi.spring.exercise.domain.user.service.ShopService;
+import katachi.spring.exercise.domain.model.CartItem;
+import katachi.spring.exercise.domain.model.MItem;
+import katachi.spring.exercise.domain.service.ShopService;
 import katachi.spring.exercise.repository.ShopMapper;
 
 @Service

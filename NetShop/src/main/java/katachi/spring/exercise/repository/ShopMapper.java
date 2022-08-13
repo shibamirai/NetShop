@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import katachi.spring.exercise.domain.user.model.CartItem;
-import katachi.spring.exercise.domain.user.model.MItem;
+import katachi.spring.exercise.domain.model.CartItem;
+import katachi.spring.exercise.domain.model.MItem;
 
 @Mapper
 public interface ShopMapper {

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import katachi.spring.exercise.application.service.UserApplicationService;
-import katachi.spring.exercise.domain.user.model.User;
-import katachi.spring.exercise.domain.user.service.UserService;
+import katachi.spring.exercise.domain.model.User;
+import katachi.spring.exercise.domain.service.UserService;
 import katachi.spring.exercise.form.SignupForm;
 
 @Controller
