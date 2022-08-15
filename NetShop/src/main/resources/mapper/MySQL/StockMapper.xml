@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Mapperとxmlのマッピング -->
+<mapper namespace="katachi.spring.exercise.repository.StockMapper">
+
+  <!-- 在庫数 -->
+  <select id="selectQuantity" resultType="int">
+	select
+		quantity
+	from
+  		stocks
+	where
+		item_id = #{id}
+  </select>
+</mapper>

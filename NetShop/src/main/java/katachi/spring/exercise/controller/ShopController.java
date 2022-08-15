@@ -10,60 +10,79 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import katachi.spring.exercise.domain.model.Cart;
 import katachi.spring.exercise.domain.model.CartItem;
-import katachi.spring.exercise.domain.model.MItem;
+import katachi.spring.exercise.domain.model.Item;
+import katachi.spring.exercise.domain.service.ItemService;
 import katachi.spring.exercise.domain.service.ShopService;
 import katachi.spring.exercise.form.AddressForm;
+import katachi.spring.exercise.form.CartForm;
+import katachi.spring.exercise.form.CartItemForm;
 import katachi.spring.exercise.form.ItemAddForm;
 
 @Controller
+@SessionAttributes(types = CartForm.class)
 public class ShopController {
-
-	@Autowired
-	ShopService shopService;
 
 	@Autowired
 	ModelMapper mapper;
 
 	@Autowired
+	ItemService itemService;
+
+	@Autowired
+	ShopService shopService;
+
+	@Autowired
 	Cart cart;
+	
+	@ModelAttribute("cartForm")
+	public CartForm getCartForm() {
+		return new CartForm();
+	}
 
 	//商品一覧画面へ遷移
-	@GetMapping("/list")
-	public String getitemlist(@ModelAttribute MItem item, Model model) {
-		//商品リストを取得
-//		List<MItem> itemList = shopService.findMany();
-//		model.addAttribute("itemList", itemList);
-//
-//		Integer count = cart.count();
-//
-//		model.addAttribute("count", count);
+	@GetMapping("/")
+	public String list(Model model) {
+
+		List<Item> itemList = itemService.getAll();
+		model.addAttribute("itemList", itemList);
 
 		return "/shop/list";
 	}
 
 	//商品詳細画面へ遷移
-	@GetMapping("/list/details/{id}")
-	public String getItemDetails(@PathVariable("id") String id, Model model) {
-		MItem item = shopService.itemOne(id);
+	@GetMapping("/item/{id}")
+	public String getItemDetails(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, Model model) {
+		Item item = itemService.get(id);
 		model.addAttribute("item", item);
+		if (!model.containsAttribute("cartItemForm")) {
+			model.addAttribute("cartItemForm", cartForm.getCartItemForm(id));
+		}
 		return "/shop/details";
 	}
 
 	//カートに商品を入れる処理
+	@PostMapping("/item/{id}")
+	public String postItemAdd(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
+		// 在庫数以下かのバリデーション
+		if (cartItemForm.getCount() > itemService.getStockQuantity(cartItemForm.getId())) {
+			bindingResult.rejectValue("count", "cartItemForm.count.over");
+		}
 
-	@PostMapping("/list/add")
-	public String postItemAdd(@ModelAttribute ItemAddForm form, BindingResult bindingResult, Model model) {
-
-		//ここでインスタンスを生成しなくてもIDとカートの中の商品の個数を引数で渡したほうが良い(疎結合なコードになるから)
-		cart.add(form.getId(), form.getCartItemInventory());
-		return "redirect:/list";
+		if (bindingResult.hasErrors()) {
+			return getItemDetails(id, cartForm, model);
+		}
+		
+		cartForm.store(cartItemForm);
+		return "redirect:/";
 	}
 
 	//カートの中を確認する画面へ遷移

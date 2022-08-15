@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
 	//ログイン画面を表示
-	@GetMapping("/")
+	@GetMapping("/login")
 	public String getLogin() {
 		return "/login/login";
 	}

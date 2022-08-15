@@ -22,19 +22,17 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.formLogin(login -> login
 				.loginProcessingUrl("/login")
-				.loginPage("/")
+				.loginPage("/login")
 				.usernameParameter("userId")
 				.passwordParameter("password")
-				.defaultSuccessUrl("/list", true)
-				.failureUrl("/")
+				.defaultSuccessUrl("/", true)
+				.failureUrl("/login?error")
 				.permitAll()
 		).logout(logout -> logout
 				.logoutSuccessUrl("/")
 		).authorizeHttpRequests(authz -> authz
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-				.mvcMatchers("/").permitAll()
-				.mvcMatchers("/signup/**").permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 		);
 		return http.build();
 	}

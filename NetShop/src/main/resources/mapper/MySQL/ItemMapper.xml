@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- Mapperとxmlのマッピング -->
+<mapper namespace="katachi.spring.exercise.repository.ItemMapper">
+
+
+  <!-- 商品一覧を取得 -->
+  <select id="selectAll" resultType="Item">
+	select
+		items.id
+		, items.name
+		, items.image
+		, items.price
+		, items.description
+		, stocks.quantity as stock_quantity
+	from
+  		items
+  	join
+  		stocks
+  	on
+  		items.id = stocks.item_id
+	where
+		items.is_deleted = 0
+  </select>
+
+  <!-- 商品取得(1件) -->
+  <select id="selectOne" resultType="Item">
+	select
+		items.id
+		, items.name
+		, items.image
+		, items.price
+		, items.description
+		, stocks.quantity as stock_quantity
+	from
+  		items
+  	join
+  		stocks
+  	on
+  		items.id = stocks.item_id
+	where
+		items.is_deleted = 0
+	and
+		items.id = #{id}
+  </select>
+</mapper>
