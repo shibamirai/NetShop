@@ -18,7 +18,7 @@
 				<table class="table">
 					<tr>
 						<th>価格</th>
-						<td th:text="|${#numbers.formatInteger(item.price, 3, 'COMMA')} 円|"></td>
+						<td th:text="|${#numbers.formatInteger(item.price, 1, 'COMMA')} 円|"></td>
 					</tr>
 					<tr>
 						<th>在庫数</th>

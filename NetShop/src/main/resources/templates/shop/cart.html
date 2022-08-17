@@ -21,7 +21,7 @@
 				<table class="table">
 					<tr>
 						<th>価格</th>
-						<td th:text="|${#numbers.formatInteger(item.price, 3, 'COMMA')} 円|"></td>
+						<td th:text="|${#numbers.formatInteger(item.price, 1, 'COMMA')} 円|"></td>
 					</tr>
 					<tr>
 						<th>在庫数</th>
@@ -44,13 +44,13 @@
 					</tr>
 					<tr>
 						<th></th>
-						<td th:text="|小計：${#numbers.formatInteger(cartForm.getSubTotal(item), 3, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
+						<td th:text="|小計：${#numbers.formatInteger(cartForm.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
 					</tr>
 				</table>
 			</div>
 		</div>
 
-		<h3 class="mt-4 text-right">合計：<strong th:text="${#numbers.formatInteger(cartForm.total, 3, 'COMMA')}"></strong>円</h3>
+		<h3 class="mt-4 text-right">合計：<strong th:text="${#numbers.formatInteger(cartForm.total, 1, 'COMMA')}"></strong>円</h3>
 		<a class="my-2 btn btn-warning float-right" th:text="購入画面へすすむ" th:href="@{/list/addressForm}"></a>
 	</div>
 </body>
