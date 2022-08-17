@@ -12,8 +12,8 @@ public class CartItemForm {
 		
 	}
 	
-	public CartItemForm(int id) {
+	public CartItemForm(int id, int count) {
 		this.id = id;
-		count = 0;
+		this.count = count;
 	}
 }

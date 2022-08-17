@@ -7,29 +7,40 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div class="row mt-4">
+		<h2 class="my-4">商品詳細</h2>
+		<div class="row mt-4 border-bottom">
 			<div class="col-md-5 text-center">
 				<img class="mx-auto" alt="" th:src="|/${item.image}|">
 			</div>
 			<div class="col-md-7">
-				<h2 class="text-large" th:text="${item.name}"></h2>
-				<h6 th:text="|価格　：${item.price}円|"></h6>
-				<h6 th:text="|在庫数：残り ${item.stockQuantity}個|"></h6>
+				<h3 th:text="${item.name}"></h3>
 				<p th:text="${item.description}"></p>
-		
-				<form method="post" th:action="@{'/item/' + ${item.id}}"
-					class="form-inline align-items-center" th:object="${cartItemForm}">
-					<input type="hidden" th:field="*{id}">
-					<label>数量：</label>
-					<input type="number" class="form-control col-4 mb-2"
-							th:field="*{count}" th:errorclass="is-invalid">
-					<label>個</label>
-					<button class="ml-2">カートに入れる</button>
-					<div class="invalid-feedback" th:errors="*{count}"></div>
-				</form>
+				<table class="table">
+					<tr>
+						<th>価格</th>
+						<td th:text="|${#numbers.formatInteger(item.price, 3, 'COMMA')} 円|"></td>
+					</tr>
+					<tr>
+						<th>在庫数</th>
+						<td th:text="|残り ${item.stockQuantity} 個|"></td>
+					</tr>
+					<tr>
+						<th class="align-middle">数量</th>
+						<td>
+							<form method="post" th:action="@{'/item/' + ${item.id}}"
+								class="form-inline align-items-center" th:object="${cartItemForm}">
+								<input type="hidden" th:field="*{id}">
+								<input type="number" class="form-control w-25"
+										th:field="*{count}" th:errorclass="is-invalid">
+								<label class="ml-2">個</label>
+								<button name="details" class="ml-2">カートに入れる</button>
+								<div class="invalid-feedback" th:errors="*{count}"></div>
+							</form>
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
-
 	</div>
 </body>
 </html>

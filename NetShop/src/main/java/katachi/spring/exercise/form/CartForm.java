@@ -1,35 +1,48 @@
 package katachi.spring.exercise.form;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-import lombok.Data;
+import katachi.spring.exercise.domain.model.Item;
 
-@Data
 public class CartForm {
 
-	private List<CartItemForm> itemFormList;
+	private Map<Item, Integer> itemMap;
 	
 	public CartForm() {
-		itemFormList = new ArrayList<>();
+		itemMap = new HashMap<>();
 	}
 	
-	public CartItemForm getCartItemForm(int id) {
-		return itemFormList.stream()
-				.filter(form -> form.getId() == id)
-				.findFirst()
-				.orElse(new CartItemForm(id));
+	public int getCount() {
+		return itemMap.size();
 	}
 
-	/**
-	 * 引数の商品をリストに追加する
-	 * 引数の商品と同じものが既にリストに存在していれば、それを削除してから追加する
-	 * @param cartItemForm
-	 */
-	public void store(CartItemForm cartItemForm) {
-		itemFormList.removeIf(form -> form.getId() == cartItemForm.getId());
-		if (cartItemForm.getCount() > 0) {
-			itemFormList.add(cartItemForm);
+	public int getCountOfItem(int id) {
+		return Optional.ofNullable(itemMap.get(new Item(id))).orElse(0);
+	}
+	
+	public int getSubTotal(Item item) {
+		int count = Optional.ofNullable(itemMap.get(item)).orElse(0);
+		return item.getPrice() * count;
+	}
+	
+	public int getTotal() {
+		return itemMap.keySet().stream()
+				.mapToInt(item -> item.getPrice() * itemMap.get(item))
+				.sum();
+	}
+
+	public void store(Item item, int count) {
+		if (count > 0) {
+			itemMap.put(item, count);
+		} else {
+			itemMap.remove(item);
 		}
+	}
+	
+	public Set<Item> getCartItems() {
+		return itemMap.keySet();
 	}
 }

@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import katachi.spring.exercise.domain.model.Cart;
@@ -25,7 +26,6 @@ import katachi.spring.exercise.domain.service.ShopService;
 import katachi.spring.exercise.form.AddressForm;
 import katachi.spring.exercise.form.CartForm;
 import katachi.spring.exercise.form.CartItemForm;
-import katachi.spring.exercise.form.ItemAddForm;
 
 @Controller
 @SessionAttributes(types = CartForm.class)
@@ -64,34 +64,56 @@ public class ShopController {
 		Item item = itemService.get(id);
 		model.addAttribute("item", item);
 		if (!model.containsAttribute("cartItemForm")) {
-			model.addAttribute("cartItemForm", cartForm.getCartItemForm(id));
+			CartItemForm cartItemForm = new CartItemForm(id, cartForm.getCountOfItem(id));
+			model.addAttribute("cartItemForm", cartItemForm);
 		}
 		return "/shop/details";
 	}
 
 	//カートに商品を入れる処理
-	@PostMapping("/item/{id}")
-	public String postItemAdd(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
-		// 在庫数以下かのバリデーション
-		if (cartItemForm.getCount() > itemService.getStockQuantity(cartItemForm.getId())) {
-			bindingResult.rejectValue("count", "cartItemForm.count.over");
-		}
+	@RequestMapping(value = "/item/{id}", params="details", method = RequestMethod.POST)
+	public String addToCart(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
+
+		validateCount(cartItemForm, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return getItemDetails(id, cartForm, model);
 		}
-		
-		cartForm.store(cartItemForm);
+
+		store(id, cartForm, cartItemForm);
 		return "redirect:/";
+	}
+
+	//カートの商品個数を変更する処理
+	@RequestMapping(value = "/item/{id}", params="cart", method = RequestMethod.POST)
+	public String changeCount(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
+
+		validateCount(cartItemForm, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			return getItemCart(cartItemForm, model);
+		}
+
+		store(id, cartForm, cartItemForm);
+		return "redirect:/list/cart";
+	}
+
+	// 購入個数のバリデーション
+	private void validateCount(CartItemForm cartItemForm, BindingResult bindingResult)  {
+		if (cartItemForm.getCount() > itemService.getStockQuantity(cartItemForm.getId())) {
+			bindingResult.rejectValue("count", "cartItemForm.count.over");
+		}
+	}
+
+	// カートへ商品を追加
+	private void store(int id, CartForm cartForm, CartItemForm cartItemForm) {
+		Item item = itemService.get(id);
+		cartForm.store(item, cartItemForm.getCount());
 	}
 
 	//カートの中を確認する画面へ遷移
 	@GetMapping("list/cart")
-	public String getItemCart(@ModelAttribute ItemAddForm form, Model model) {
-		model.addAttribute("cart", cart);
-		//合計金額
-		int money = cart.money();
-		model.addAttribute("money", money);
+	public String getItemCart(@ModelAttribute CartItemForm form, Model model) {
 		return "/shop/cart";
 	}
 
@@ -154,25 +176,6 @@ public class ShopController {
 				"熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県");
 		model.addAttribute("list", list);
 		return "/shop/addressForm";
-	}
-
-	//カートの中の商品数量変更
-	@PostMapping(value = "/list/cartItem", params = "change")
-	public String postChangeCartItem(@ModelAttribute ItemAddForm form, BindingResult bindingResult, Model model,
-			Errors errors) {
-		if (cart.change(form.getId(), form.getCartItemInventory()) == false) {
-			errors.rejectValue("cartItemInventory", "cartItemInventory.over");
-			bindingResult.hasErrors();
-			return getItemCart(form, model);
-		}
-		return "redirect:/list/cart";
-	}
-
-	//カートの中の商品を削除
-	@PostMapping(value = "/list/cartItem", params = "deleted")
-	public String postDeletedCartItem(@ModelAttribute ItemAddForm form, Model model) {
-		cart.deleted(form.getId());
-		return "redirect:/list/cart";
 	}
 
 }
