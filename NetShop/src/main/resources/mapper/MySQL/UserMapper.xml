@@ -53,4 +53,27 @@
 		)
 	</insert>
 
+	<!-- ユーザー検索 -->
+	<select id="findOne"  resultType="User">
+		select
+			id
+			, email
+			, password
+			, family_name
+			, first_name
+			, role
+			, birthday
+			, gender
+			, phone_number
+			, postal_code
+			, address1
+			, address2
+			, address3
+			, address4
+		from
+			users
+		where
+			email = #{email}
+	</select>
+
    </mapper>

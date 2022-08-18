@@ -5,13 +5,27 @@
 <!-- Mapperとxmlのマッピング -->
 <mapper namespace="katachi.spring.exercise.repository.StockMapper">
 
-  <!-- 在庫数 -->
-  <select id="selectQuantity" resultType="int">
-	select
-		quantity
-	from
-  		stocks
-	where
-		item_id = #{id}
-  </select>
+	<!-- 在庫数 -->
+	<select id="getQuantity" resultType="int">
+		select
+			quantity
+		from
+			stocks
+		where
+			item_id = #{id}
+	</select>
+
+	<!-- 入庫 -->
+	<update id="increase">
+		update stocks set
+			quantity = quantity + #{count}
+		where item_id = #{id}
+	</update>
+
+	<!-- 出庫 -->
+	<update id="decrease">
+		update stocks set
+			quantity = quantity - #{count}
+		where item_id = #{id}
+	</update>
 </mapper>

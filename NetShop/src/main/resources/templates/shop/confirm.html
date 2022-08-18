@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+<link rel="stylesheet" th:href="@{/css/addressForm.css}">
+<title>注文内容確認</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2 class="my-4">注文内容を確認・変更する</h2>
+		<div class="row justify-content-center bg-white p-4">
+			<div class="col-md-5">
+				<address>
+					<strong>
+						お届け先住所
+						<a th:href="@{/list/address}">変更</a>
+					</strong>
+					<br>
+					[[${addressForm.addressee}]]<br>
+					[[${addressForm.postalCode}]]<br>
+					[[${addressForm.address1}]][[${addressForm.address2}]][[${addressForm.address3}]]<br>
+					[[${addressForm.address4}]]<br>
+					電話番号: [[${addressForm.phoneNumber}]]
+				</address>
+			</div>
+			<div class="col-md-5 text-center align-self-end pb-4">
+				<h4 th:text="|合計金額：${#numbers.formatInteger(cartForm.total, 1, 'COMMA')}円|"></h4>
+				<form th:action="@{/list/voucher}" method="post" th:object="${addressForm}">
+					<input type="hidden" th:field="*{addressee}">
+					<input type="hidden" th:field="*{phoneNumber}">
+					<input type="hidden" th:field="*{postalCode}">
+					<input type="hidden" th:field="*{address1}">
+					<input type="hidden" th:field="*{address2}">
+					<input type="hidden" th:field="*{address3}">
+					<input type="hidden" th:field="*{address4}">
+					<button type="submit" class="btn btn-warning">注文する</button>
+					<a class="btn btn-secondary" th:href="@{/list/cart}">カートへ戻る</a>
+				</form>
+			</div>
+		</div>
+		<div class="row mt-4 border-bottom" th:each="item: ${cartForm.cartItems}">
+			<div class="col-md-5 text-center">
+				<img class="mx-auto" alt="" th:src="|/${item.image}|">
+			</div>
+			<div class="col-md-7">
+				<h3 th:text="${item.name}"></h3>
+				<p th:text="${item.description}"></p>
+				<table class="table">
+					<tr>
+						<th>価格</th>
+						<td th:text="|${#numbers.formatInteger(item.price, 1, 'COMMA')} 円|"></td>
+					</tr>
+					<tr>
+						<th>在庫数</th>
+						<td th:text="|残り ${item.stockQuantity} 個|"></td>
+					</tr>
+					<tr>
+						<th class="align-middle">数量</th>
+						<td th:text="${cartForm.getCountOfItem(item.id)}">
+						</td>
+					</tr>
+					<tr>
+						<th></th>
+						<td th:text="|小計：${#numbers.formatInteger(cartForm.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

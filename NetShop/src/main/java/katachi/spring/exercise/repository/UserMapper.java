@@ -10,5 +10,6 @@ public interface UserMapper {
 
 	public LoginUser findLoginUser(String email);
 	public int insertOne(User user);
+	public User findOne(String email);
 
 }

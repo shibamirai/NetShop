@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import katachi.spring.exercise.domain.model.Item;
 
@@ -29,8 +30,8 @@ public class CartForm {
 	}
 	
 	public int getTotal() {
-		return itemMap.keySet().stream()
-				.mapToInt(item -> item.getPrice() * itemMap.get(item))
+		return itemMap.entrySet().stream()
+				.mapToInt(entry -> entry.getKey().getPrice() * entry.getValue())
 				.sum();
 	}
 
@@ -44,5 +45,9 @@ public class CartForm {
 	
 	public Set<Item> getCartItems() {
 		return itemMap.keySet();
+	}
+	
+	public void forEach(BiConsumer<? super Item, ? super Integer> action) {
+		itemMap.forEach(action);
 	}
 }

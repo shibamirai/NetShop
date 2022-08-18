@@ -14,24 +14,24 @@ import katachi.spring.exercise.repository.StockMapper;
 public class ItemServiceImpl implements ItemService {
 
 	@Autowired
-	private ItemMapper mapper;
+	private ItemMapper itemMapper;
 
 	@Autowired
 	private StockMapper stockMapper;
 
 	@Override
 	public List<Item> getAll() {
-		return mapper.selectAll();
+		return itemMapper.selectAll();
 	}
 
 	@Override
 	public Item get(int id) {
-		return mapper.selectOne(id);
+		return itemMapper.selectOne(id);
 	}
 	
 	@Override
 	public int getStockQuantity(int id) {
-		return stockMapper.selectQuantity(id);
+		return stockMapper.getQuantity(id);
 	}
 
 	@Override
@@ -42,8 +42,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public void deliver(int id, int num) {
-		// TODO 自動生成されたメソッド・スタブ
-		
+		stockMapper.decrease(id, num);
 	}
 
 }

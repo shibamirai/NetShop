@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+<link rel="stylesheet" th:href="@{/css/addressForm.css}">
+<title>住所入力</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2 class="my-4 text-center">お届け先住所の入力</h2>
+			<form id="address-form" method="post" th:action="@{/list/addressForm}"
+					class="form-address p-3 border rounded" th:object="${addressForm}">
+				<!-- 宛名 -->
+				<div class="form-group">
+					<label for=addressee th:text="宛名"></label>
+					<input type="text" class="form-control" th:field="*{addressee}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{addressee}"></div>
+				</div>
+		
+				<!-- 電話番号 -->
+				<div class="form-group">
+					<label for="phoneNumber" th:text="#{phoneNumber}"></label>
+					<input type="text" class="form-control" th:field="*{phoneNumber}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+				</div>
+		
+				<!-- 郵便番号 -->
+				<div class="form-group">
+					<label for="postalCode" th:text="#{postalCode}"></label>
+					<input type="text" class="form-control" th:field="*{postalCode}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{postalCode}"></div>
+				</div>
+		
+				<!-- 都道府県 -->
+				<div class="form-group">
+					<label for="address1" th:text="#{address1}"></label>
+					<select class="form-control" th:field="*{address1}" th:errorclass="is-invalid">
+						<option th:each="item : ${list}" th:value="${item}"
+							th:selected="${item} == *{address1}" th:text="${item}"></option>
+					</select>
+				</div>
+		
+				<!-- 市区町村 -->
+				<div class="form-group">
+					<label for="address2" th:text="#{address2}"></label>
+					<input type="text" class="form-control" th:field="*{address2}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{address2}"></div>
+				</div>
+		
+				<!-- 丁目  番地  号 -->
+				<div class="form-group">
+					<label for="address3" th:text="#{address3}"></label>
+					<input type="text" class="form-control" th:field="*{address3}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{address3}"></div>
+				</div>
+		
+				<!-- ビル・マンション名 -->
+				<div class="form-group">
+					<label for="address4" th:text="#{address4}"></label>
+					<input type="text" class="form-control" th:field="*{address4}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{address4}"></div>
+				</div>
+				
+				<!-- 登録ボタン -->
+				<div class="text-center">
+					<button type="submit" class="btn btn-warning">注文内容を確認する</button>
+					<a th:href="@{/list/cart}" class="btn btn-secondary">カートへ戻る</a>
+				</div>
+			</form>
+      </div>
+</body>
+</html>
