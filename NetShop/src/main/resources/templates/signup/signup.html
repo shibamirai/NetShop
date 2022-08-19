@@ -1,115 +1,136 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
-<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}" defer></script>
-<link rel="stylesheet" th:href="@{/css/signup.css}">
 <title th:text="#{user.signup.title}"></title>
 </head>
 <body>
-	<div id="content" class="clearfix mb-4">
-		<div class="container text-center">
-			<h2 th:text="#{user.signup.title}"></h2>
-		
-			<form id="signup-form" method="post" th:action="@{/signup/confirm}"
-					class="form-signup p-3 border rounded" th:object="${signupForm}">
-		
+	<div layout:fragment="content">
+		<div class="col-md-10 mx-auto py-4">
+			<h2 th:text="#{user.signup.title}" class="text-center"></h2>
+
+			<form method="post" th:action="@{/signup/confirm}"
+					class="p-3 mt-4 border rounded" th:object="${signupForm}">
+
 				<!-- メールアドレス -->
-				<div class="form-group">
-					<label for="email" th:text="#{email}"></label>
-					<input type="text" class="form-control" th:field="*{email}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{email}"></div>
+				<div class="form-group row">
+					<label for="email" th:text="#{email}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{email}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{email}"></div>
+					</div>
 				</div>
-		
+
 				<!-- パスワード -->
-				<div class="form-group">
-					<label for="password" th:text="#{password}"></label>
-					<input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{password}"></div>
+				<div class="form-group row">
+					<label for="password" th:text="#{password}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{password}"></div>
+					</div>
 				</div>
 		
 				<!-- 苗字 -->
-				<div class="form-group">
-					<label for="familyName" th:text="#{familyName}"></label>
-					<input type="text" class="form-control" th:field="*{familyName}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{familyName}"></div>
+				<div class="form-group row">
+					<label for="familyName" th:text="#{familyName}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{familyName}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{familyName}"></div>
+					</div>
 				</div>
 		
 				<!-- 名前 -->
-				<div class="form-group">
-					<label for="firstName" th:text="#{firstName}"></label>
-					<input type="text" class="form-control" th:field="*{firstName}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{firstName}"></div>
+				<div class="form-group row">
+					<label for="firstName" th:text="#{firstName}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{firstName}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{firstName}"></div>
+					</div>
 				</div>
 		
 				<!-- 生年月日 -->
-				<div class="form-group">
-					<label for="birthday" th:text="#{birthday}"></label>
-					<input type="date" class="form-control" th:field="*{birthday}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{birthday}"></div>
+				<div class="form-group row">
+					<label for="birthday" th:text="#{birthday}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="date" class="form-control" th:field="*{birthday}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{birthday}"></div>
+					</div>
 				</div>
 		
 				<!-- 性別 -->
-				<div class="form-group">
-					<div th:each="item : ${genderMap}" class="form-check-inline">
-						<input type="radio" class="form-check-input" th:value="${item.value}"
-							th:field="*{gender}" th:checked="*{gender} == ${item.value}">
-						<label class="form-check-label" th:text="${item.key}"></label>
+				<div class="form-group row">
+					<label for="gender" th:text="#{gender}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8 align-self-center">
+						<div th:each="item : ${genderMap}" class="form-check-inline">
+							<input type="radio" class="form-check-input" th:value="${item.value}"
+								th:field="*{gender}" th:checked="*{gender} == ${item.value}">
+							<label class="form-check-label" th:text="${item.key}"></label>
+						</div>
+						<div class="text-danger" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></div>
 					</div>
-					<div class="text-danger" th:if="${#fields.hasErrors('gender')}"
-						th:errors="*{gender}"></div>
 				</div>
 		
 				<!-- 電話番号 -->
-				<div class="form-group">
-					<label for="phoneNumber" th:text="#{phoneNumber}"></label>
-					<input type="text" class="form-control" th:field="*{phoneNumber}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+				<div class="form-group row">
+					<label for="phoneNumber" th:text="#{phoneNumber}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{phoneNumber}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{phoneNumber}"></div>
+					</div>
 				</div>
 		
 				<!-- 郵便番号 -->
-				<div class="form-group">
-					<label for="postalCode" th:text="#{postalCode}"></label>
-					<input type="text" class="form-control" th:field="*{postalCode}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{postalCode}"></div>
+				<div class="form-group row">
+					<label for="postalCode" th:text="#{postalCode}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{postalCode}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{postalCode}"></div>
+					</div>
 				</div>
 		
 				<!-- 都道府県 -->
-				<div class="form-group">
-					<label for="address1" th:text="#{address1}"></label>
-					<select class="form-control" th:field="*{address1}" th:errorclass="is-invalid">
-						<option th:each="item : ${list}" th:value="${item}"
-							th:selected="${item} == *{address1}" th:text="${item}"></option>
-					</select>
+				<div class="form-group row">
+					<label for="address1" th:text="#{address1}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<select class="form-control" th:field="*{address1}" th:errorclass="is-invalid">
+							<option th:each="item : ${list}" th:value="${item}"
+								th:selected="${item} == *{address1}" th:text="${item}"></option>
+						</select>
+					</div>
 				</div>
 		
 				<!-- 市区町村 -->
-				<div class="form-group">
-					<label for="address2" th:text="#{address2}"></label>
-					<input type="text" class="form-control" th:field="*{address2}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{address2}"></div>
+				<div class="form-group row">
+					<label for="address2" th:text="#{address2}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{address2}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{address2}"></div>
+					</div>
 				</div>
 		
 				<!-- 丁目  番地  号 -->
-				<div class="form-group">
-					<label for="address3" th:text="#{address3}"></label>
-					<input type="text" class="form-control" th:field="*{address3}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{address3}"></div>
+				<div class="form-group row">
+					<label for="address3" th:text="#{address3}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{address3}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{address3}"></div>
+					</div>
 				</div>
 		
 				<!-- ビル・マンション名 -->
-				<div class="form-group">
-					<label for="address4" th:text="#{address4}"></label>
-					<input type="text" class="form-control" th:field="*{address4}" th:errorclass="is-invalid">
-					<div class="invalid-feedback" th:errors="*{address4}"></div>
+				<div class="form-group row">
+					<label for="address4" th:text="#{address4}" class="col-sm-4 col-form-label"></label>
+					<div class="col-sm-8">
+						<input type="text" class="form-control" th:field="*{address4}" th:errorclass="is-invalid">
+						<div class="invalid-feedback" th:errors="*{address4}"></div>
+					</div>
 				</div>
 				
 				<!-- 登録ボタン -->
-				<button type="submit" name="submit" class="btn btn-light btn-outline-dark" th:text="#{user.signup.btn}"></button>
-		
+				<div class="text-center">
+					<button type="submit" name="submit" class="btn btn-light btn-outline-dark w-25" th:text="#{user.signup.btn}"></button>
+				</div>
 			</form>
 		</div>
 	</div>

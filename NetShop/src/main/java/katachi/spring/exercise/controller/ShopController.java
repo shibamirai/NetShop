@@ -1,7 +1,5 @@
 package katachi.spring.exercise.controller;
 
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,25 +17,25 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import katachi.spring.exercise.application.service.UserApplicationService;
+import katachi.spring.exercise.application.service.ApplicationService;
+import katachi.spring.exercise.domain.model.Cart;
 import katachi.spring.exercise.domain.model.Item;
 import katachi.spring.exercise.domain.model.LoginUser;
 import katachi.spring.exercise.domain.model.User;
 import katachi.spring.exercise.domain.service.ItemService;
 import katachi.spring.exercise.domain.service.UserService;
 import katachi.spring.exercise.form.AddressForm;
-import katachi.spring.exercise.form.CartForm;
 import katachi.spring.exercise.form.CartItemForm;
 
 @Controller
-@SessionAttributes(types = CartForm.class)
+@SessionAttributes(types = Cart.class)
 public class ShopController {
 
 	@Autowired
 	private ModelMapper mapper;
 
 	@Autowired
-	private UserApplicationService userApplicationService;
+	private ApplicationService applicationService;
 
 	@Autowired
 	private ItemService itemService;
@@ -45,9 +43,9 @@ public class ShopController {
 	@Autowired
 	private UserService userService;
 	
-	@ModelAttribute("cartForm")
-	public CartForm getCartForm() {
-		return new CartForm();
+	@ModelAttribute("cart")
+	public Cart getCart() {
+		return new Cart();
 	}
 
 	/**
@@ -57,50 +55,59 @@ public class ShopController {
 	 */
 	@GetMapping("/")
 	public String list(Model model) {
-
-		List<Item> itemList = itemService.getAll();
-		model.addAttribute("itemList", itemList);
-
+		model.addAttribute("itemList", itemService.getAll());
 		return "/shop/list";
 	}
 
 	/**
 	 * 商品詳細画面
 	 * @param id
-	 * @param cartForm
+	 * @param cart
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("/item/{id}")
-	public String getItemDetails(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, Model model) {
-		Item item = itemService.get(id);
-		model.addAttribute("item", item);
+	public String getItemDetails(
+			@PathVariable("id") int id,
+			@ModelAttribute Cart cart,
+			Model model
+	) {
+		// バリデーションエラーによる再入力画面表示"ではない"場合
 		if (!model.containsAttribute("cartItemForm")) {
-			CartItemForm cartItemForm = new CartItemForm(id, cartForm.getCountOfItem(id));
+			// セッションのカート情報からCartItemFormを作成する
+			CartItemForm cartItemForm = new CartItemForm(id, cart.getCountOfItem(id));
 			model.addAttribute("cartItemForm", cartItemForm);
 		}
+
+		model.addAttribute("item", itemService.get(id));
+
 		return "/shop/details";
 	}
 
 	/**
 	 * 商品詳細からカートに追加
 	 * @param id
-	 * @param cartForm
+	 * @param cart
 	 * @param cartItemForm
 	 * @param bindingResult
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/item/{id}", params="details", method = RequestMethod.POST)
-	public String addToCart(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
-
+	public String addToCart(
+			@PathVariable("id") int id,
+			@ModelAttribute Cart cart,
+			@ModelAttribute @Validated CartItemForm cartItemForm,
+			BindingResult bindingResult,
+			Model model
+	) {
 		validateCount(cartItemForm, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			return getItemDetails(id, cartForm, model);
+			return getItemDetails(id, cart, model);
 		}
 
-		store(id, cartForm, cartItemForm);
+		store(id, cart, cartItemForm);
 		return "redirect:/";
 	}
 
@@ -118,14 +125,14 @@ public class ShopController {
 	/**
 	 * カート内の商品個数変更
 	 * @param id
-	 * @param cartForm
+	 * @param cart
 	 * @param cartItemForm
 	 * @param bindingResult
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/item/{id}", params="cart", method = RequestMethod.POST)
-	public String changeCount(@PathVariable("id") int id, @ModelAttribute CartForm cartForm, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
+	public String changeCount(@PathVariable("id") int id, @ModelAttribute Cart cart, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
 
 		validateCount(cartItemForm, bindingResult);
 
@@ -133,12 +140,12 @@ public class ShopController {
 			return getItemCart(cartItemForm, model);
 		}
 
-		store(id, cartForm, cartItemForm);
+		store(id, cart, cartItemForm);
 		return "redirect:/list/cart";
 	}
 
 	/**
-	 * 購入個数のバリデーション
+	 * 購入個数が在庫数以下かのバリデーション
 	 * @param cartItemForm
 	 * @param bindingResult
 	 */
@@ -149,14 +156,14 @@ public class ShopController {
 	}
 
 	/**
-	 * カートに入れる商品をセッションに保存
+	 * 商品をカートに追加
 	 * @param id
-	 * @param cartForm
+	 * @param cart
 	 * @param cartItemForm
 	 */
-	private void store(int id, CartForm cartForm, CartItemForm cartItemForm) {
+	private void store(int id, Cart cart, CartItemForm cartItemForm) {
 		Item item = itemService.get(id);
-		cartForm.store(item, cartItemForm.getCount());
+		cart.store(item, cartItemForm.getCount());
 	}
 
 	/**
@@ -169,7 +176,7 @@ public class ShopController {
 	public String getAddress(@ModelAttribute AddressForm addressForm, Model model,
 			@AuthenticationPrincipal LoginUser loginUser ) {
 
-		model.addAttribute("list", userApplicationService.getPrefectureList());
+		model.addAttribute("list", applicationService.getPrefectureList());
 
 		if (loginUser != null) {
 			User user = userService.getUser(loginUser.getEmail());
@@ -205,18 +212,18 @@ public class ShopController {
 
 	/**
 	 * 注文受付
-	 * @param cartForm
+	 * @param cart
 	 * @param addressForm
 	 * @param sessionStatus
 	 * @return
 	 */
 	@PostMapping("/list/voucher")
-	public String postOrder(@ModelAttribute CartForm cartForm, @ModelAttribute AddressForm addressForm, SessionStatus sessionStatus) {
+	public String postOrder(@ModelAttribute Cart cart, @ModelAttribute AddressForm addressForm, SessionStatus sessionStatus) {
 
 		// TODO 現在の在庫数で注文数のバリデーションをやり直すべき
 
 		// 注文した数だけ在庫を減らす
-		cartForm.forEach((item, count) -> itemService.deliver(item.getId(), count));
+		cart.forEach((item, count) -> itemService.deliver(item.getId(), count));
 
 		// Cart情報をセッションから削除
 		sessionStatus.setComplete();

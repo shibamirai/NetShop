@@ -25,7 +25,7 @@
 				</address>
 			</div>
 			<div class="col-md-5 text-center align-self-end pb-4">
-				<h4 th:text="|合計金額：${#numbers.formatInteger(cartForm.total, 1, 'COMMA')}円|"></h4>
+				<h4 th:text="|合計金額：${#numbers.formatInteger(cart.total, 1, 'COMMA')}円|"></h4>
 				<form th:action="@{/list/voucher}" method="post" th:object="${addressForm}">
 					<input type="hidden" th:field="*{addressee}">
 					<input type="hidden" th:field="*{phoneNumber}">
@@ -39,9 +39,9 @@
 				</form>
 			</div>
 		</div>
-		<div class="row mt-4 border-bottom" th:each="item: ${cartForm.cartItems}">
+		<div class="row mt-4 border-bottom" th:each="item: ${cart.cartItems}">
 			<div class="col-md-5 text-center">
-				<img class="mx-auto" alt="" th:src="|/${item.image}|">
+				<img class="mx-auto" alt="" th:src="@{'/image/' + ${item.image}}">
 			</div>
 			<div class="col-md-7">
 				<h3 th:text="${item.name}"></h3>
@@ -57,12 +57,12 @@
 					</tr>
 					<tr>
 						<th class="align-middle">数量</th>
-						<td th:text="${cartForm.getCountOfItem(item.id)}">
+						<td th:text="${cart.getCountOfItem(item.id)}">
 						</td>
 					</tr>
 					<tr>
 						<th></th>
-						<td th:text="|小計：${#numbers.formatInteger(cartForm.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
+						<td th:text="|小計：${#numbers.formatInteger(cart.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
 					</tr>
 				</table>
 			</div>

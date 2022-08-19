@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import katachi.spring.exercise.application.service.UserApplicationService;
+import katachi.spring.exercise.application.service.ApplicationService;
 import katachi.spring.exercise.domain.model.User;
 import katachi.spring.exercise.domain.service.UserService;
 import katachi.spring.exercise.form.SignupForm;
@@ -21,7 +21,7 @@ import katachi.spring.exercise.form.SignupForm;
 public class SignupController {
 
 	@Autowired
-	private UserApplicationService userApplicationService;
+	private ApplicationService applicationService;
 
 	@Autowired
 	private UserService userService;
@@ -31,8 +31,8 @@ public class SignupController {
 
 	@GetMapping("/signup")
 	public String getSignup(Model model, Locale locale, @ModelAttribute SignupForm form) {
-		model.addAttribute("genderMap", userApplicationService.getGenderMap(locale));
-		model.addAttribute("list", userApplicationService.getPrefectureList());
+		model.addAttribute("genderMap", applicationService.getGenderMap(locale));
+		model.addAttribute("list", applicationService.getPrefectureList());
 		return "signup/signup";
 	}
 

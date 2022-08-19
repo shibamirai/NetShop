@@ -13,9 +13,11 @@ public class JavaConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper mapper = new ModelMapper();
+		
+		// AddressFormの宛名にはUserのフルネームを設定する
 		mapper.typeMap(User.class, AddressForm.class)
 			  .addMapping(User::getFullName, AddressForm::setAddressee);
+
 		return mapper;
-				
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserApplicationService {
+public class ApplicationService {
 
 	@Autowired
 	private MessageSource messageSource;
@@ -25,7 +25,8 @@ public class UserApplicationService {
 		genderMap.put(female, 2);
 		return genderMap;
 	}
-	
+
+	/** selectボックス用の都道府県リスト */
 	public List<String> getPrefectureList() {
 		return Arrays.asList(
 				"北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",

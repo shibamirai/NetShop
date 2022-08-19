@@ -27,14 +27,14 @@
             </div>
           </li>
           <li sec:authorize="!isAuthenticated()" class="nav-item">
-            <a th:href="@{/signup}" class="nav-link">サインイン</a>
+            <a th:href="@{/signup}" class="nav-link">サインアップ</a>
           <li>
           <li sec:authorize="!isAuthenticated()" class="nav-item">
             <a th:href="@{/login}" class="nav-link">ログイン</a>
           <li>
-          <li class="nav-item">
+          <li class="nav-item" th:if="${cart != null}">
             <a th:href="@{/list/cart}" class="btn btn-light">
-              カート <span class="badge badge-light" th:text="${cartForm.getCount}"></span>
+              カート <span class="badge badge-light" th:text="${cart.getCount}"></span>
             </a>
           </li>
         </ul>

@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-md-4 p-2" th:each="item: ${itemList}">
 				<div class="card">
-					<img th:src="${item.image}" class="border">
+					<img th:src="@{'/image/' + ${item.image}}" class="border">
 					<div class="card-body">
 						<h4>
 							<a class="card-title stretched-link" th:href="@{'/item/' + ${item.id}}" th:text="${item.name}"></a>
