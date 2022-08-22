@@ -1,5 +1,7 @@
 package katachi.spring.exercise.controller;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import katachi.spring.exercise.application.service.ApplicationService;
 import katachi.spring.exercise.domain.model.Cart;
+import katachi.spring.exercise.domain.model.CartItem;
 import katachi.spring.exercise.domain.model.Item;
 import katachi.spring.exercise.domain.model.LoginUser;
 import katachi.spring.exercise.domain.model.User;
@@ -74,9 +77,9 @@ public class ShopController {
 	) {
 		// バリデーションエラーによる再入力画面表示"ではない"場合
 		if (!model.containsAttribute("cartItemForm")) {
-			// セッションのカート情報からCartItemFormを作成する
-			CartItemForm cartItemForm = new CartItemForm(id, cart.getCountOfItem(id));
-			model.addAttribute("cartItemForm", cartItemForm);
+			// 当該商品がカートにあればその個数をフォームにセットする
+			int count = cart.containsItem(id) ? cart.getCartItem(id).getCount() : 0;
+			model.addAttribute("cartItemForm", new CartItemForm(id, count));
 		}
 
 		model.addAttribute("item", itemService.get(id));
@@ -101,13 +104,15 @@ public class ShopController {
 			BindingResult bindingResult,
 			Model model
 	) {
-		validateCount(cartItemForm, bindingResult);
+		if (!isInStock(id, cartItemForm.getCount())) {
+			bindingResult.rejectValue("count", "cartItemForm.count.over");
+		}
 
 		if (bindingResult.hasErrors()) {
 			return getItemDetails(id, cart, model);
 		}
 
-		store(id, cart, cartItemForm);
+		store(cart, id, cartItemForm.getCount());
 		return "redirect:/";
 	}
 
@@ -117,8 +122,14 @@ public class ShopController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("list/cart")
-	public String getItemCart(@ModelAttribute CartItemForm form, Model model) {
+	@GetMapping("/cart")
+	public String getItemCart(@ModelAttribute Cart cart, @ModelAttribute CartItemForm form, Model model) {
+		// カートの商品情報（価格、在庫数など）を現在のDBの情報で更新する
+		if (cart.getCount() > 0) {
+			List<Item> itemList = itemService.get(cart.getItemIds());
+			itemList.stream().forEach(item -> cart.getCartItem(item.getId()).setItem(item));
+			model.addAttribute("cart", cart);
+		}
 		return "/shop/cart";
 	}
 
@@ -134,36 +145,40 @@ public class ShopController {
 	@RequestMapping(value = "/item/{id}", params="cart", method = RequestMethod.POST)
 	public String changeCount(@PathVariable("id") int id, @ModelAttribute Cart cart, @ModelAttribute @Validated CartItemForm cartItemForm, BindingResult bindingResult, Model model) {
 
-		validateCount(cartItemForm, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return getItemCart(cartItemForm, model);
+		if (!isInStock(id, cartItemForm.getCount())) {
+			bindingResult.rejectValue("count", "cartItemForm.count.over");
 		}
 
-		store(id, cart, cartItemForm);
-		return "redirect:/list/cart";
+		if (bindingResult.hasErrors()) {
+			return getItemCart(cart, cartItemForm, model);
+		}
+
+		store(cart, id, cartItemForm.getCount());
+		return "redirect:/cart";
 	}
 
 	/**
-	 * 購入個数が在庫数以下かのバリデーション
-	 * @param cartItemForm
-	 * @param bindingResult
+	 * 指定商品の在庫が足りているか
+	 * @param itemId
+	 * @param count
+	 * @return
 	 */
-	private void validateCount(CartItemForm cartItemForm, BindingResult bindingResult)  {
-		if (cartItemForm.getCount() > itemService.getStockQuantity(cartItemForm.getId())) {
-			bindingResult.rejectValue("count", "cartItemForm.count.over");
+	private boolean isInStock(int itemId, int count) {
+		if (itemService.getStockQuantity(itemId) >= count) {
+			return true;
 		}
+		return false;
 	}
 
 	/**
 	 * 商品をカートに追加
-	 * @param id
 	 * @param cart
-	 * @param cartItemForm
+	 * @param id
+	 * @param count
 	 */
-	private void store(int id, Cart cart, CartItemForm cartItemForm) {
+	private void store(Cart cart, int id, int count) {
 		Item item = itemService.get(id);
-		cart.store(item, cartItemForm.getCount());
+		cart.store(id, item, count);
 	}
 
 	/**
@@ -220,10 +235,17 @@ public class ShopController {
 	@PostMapping("/list/voucher")
 	public String postOrder(@ModelAttribute Cart cart, @ModelAttribute AddressForm addressForm, SessionStatus sessionStatus) {
 
-		// TODO 現在の在庫数で注文数のバリデーションをやり直すべき
+		// 再度在庫数の確認
+		for (CartItem cartItem: cart.getCartItems()) {
+			if (cartItem.isOutOfStock()) {
+				return "redirect:/cart";
+			}
+		}
 
 		// 注文した数だけ在庫を減らす
-		cart.forEach((item, count) -> itemService.deliver(item.getId(), count));
+		cart.getCartItems().forEach(cartItem -> 
+				itemService.deliver(cartItem.getItem().getId(), cartItem.getCount()));
+
 
 		// Cart情報をセッションから削除
 		sessionStatus.setComplete();

@@ -35,34 +35,34 @@
 					<input type="hidden" th:field="*{address3}">
 					<input type="hidden" th:field="*{address4}">
 					<button type="submit" class="btn btn-warning">注文する</button>
-					<a class="btn btn-secondary" th:href="@{/list/cart}">カートへ戻る</a>
+					<a class="btn btn-secondary" th:href="@{/cart}">カートへ戻る</a>
 				</form>
 			</div>
 		</div>
-		<div class="row mt-4 border-bottom" th:each="item: ${cart.cartItems}">
+		<div class="row mt-4 border-bottom" th:each="cartItem: ${cart.cartItems}">
 			<div class="col-md-5 text-center">
-				<img class="mx-auto" alt="" th:src="@{'/image/' + ${item.image}}">
+				<img class="mx-auto" alt="" th:src="@{'/image/' + ${cartItem.item.image}}">
 			</div>
 			<div class="col-md-7">
-				<h3 th:text="${item.name}"></h3>
-				<p th:text="${item.description}"></p>
+				<h3 th:text="${cartItem.item.name}"></h3>
+				<p th:text="${cartItem.item.description}"></p>
 				<table class="table">
 					<tr>
 						<th>価格</th>
-						<td th:text="|${#numbers.formatInteger(item.price, 1, 'COMMA')} 円|"></td>
+						<td th:text="|${#numbers.formatInteger(cartItem.item.price, 1, 'COMMA')} 円|"></td>
 					</tr>
 					<tr>
 						<th>在庫数</th>
-						<td th:text="|残り ${item.stockQuantity} 個|"></td>
+						<td th:text="|残り ${cartItem.item.stockQuantity} 個|"></td>
 					</tr>
 					<tr>
 						<th class="align-middle">数量</th>
-						<td th:text="${cart.getCountOfItem(item.id)}">
+						<td th:text="${cartItem.count}">
 						</td>
 					</tr>
 					<tr>
 						<th></th>
-						<td th:text="|小計：${#numbers.formatInteger(cart.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
+						<td th:text="|小計：${#numbers.formatInteger(cartItem.subTotal, 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
 					</tr>
 				</table>
 			</div>

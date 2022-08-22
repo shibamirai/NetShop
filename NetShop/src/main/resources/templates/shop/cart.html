@@ -8,40 +8,41 @@
 <body>
 	<div layout:fragment="content">
 		<h2 class="my-4">ショッピングカート</h2>
-		<div class="row mt-4 border-bottom" th:each="item: ${cart.cartItems}">
+		<div class="row mt-4 border-bottom" th:each="cartItem: ${cart.cartItems}">
 			<div class="col-md-5 text-center">
-				<img class="mx-auto" alt="" th:src="@{'/image/' + ${item.image}}">
+				<img class="mx-auto" alt="" th:src="@{'/image/' + ${cartItem.item.image}}">
 			</div>
 			<div class="col-md-7">
-				<h3 th:text="${item.name}"></h3>
-				<p th:text="${item.description}"></p>
+				<h3 th:text="${cartItem.item.name}"></h3>
+				<p th:text="${cartItem.item.description}"></p>
 				<table class="table">
 					<tr>
 						<th>価格</th>
-						<td th:text="|${#numbers.formatInteger(item.price, 1, 'COMMA')} 円|"></td>
+						<td th:text="|${#numbers.formatInteger(cartItem.item.price, 1, 'COMMA')} 円|"></td>
 					</tr>
 					<tr>
 						<th>在庫数</th>
-						<td th:text="|残り ${item.stockQuantity} 個|"></td>
+						<td th:text="|残り ${cartItem.item.stockQuantity} 個|"></td>
 					</tr>
 					<tr>
 						<th class="align-middle">数量</th>
 						<td>
-							<form method="post" th:action="@{'/item/' + ${item.id}}"
+							<form method="post" th:action="@{'/item/' + ${cartItem.item.id}}"
 								class="form-inline align-items-center" th:object="${cartItemForm}">
-								<input type="hidden" name="id" th:value="${item.id}">
+								<input type="hidden" name="id" th:value="${cartItem.item.id}">
 								<input type="number" class="form-control w-25"
-										name="count" th:value="${cart.getCountOfItem(item.id)}"
-										th:classappend="${#fields.hasErrors('count') && cartItemForm.id == item.id} ? 'is-invalid'">
+										name="count" th:value="${cartItem.count}"
+										th:classappend="${(#fields.hasErrors('count') && cartItemForm.id == cartItem.item.id) || cartItem.outOfStock} ? 'is-invalid'">
 								<label class="ml-2">個</label>
 								<button name="cart" class="ml-2">変更</button>
 								<div class="invalid-feedback" th:errors="*{count}"></div>
+								<div class="invalid-feedback" th:unless="${#fields.hasErrors('count')}" th:text="#{cartItemForm.count.over}"></div>
 							</form>
 						</td>
 					</tr>
 					<tr>
 						<th></th>
-						<td th:text="|小計：${#numbers.formatInteger(cart.getSubTotal(item), 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
+						<td th:text="|小計：${#numbers.formatInteger(cartItem.subTotal, 1, 'COMMA')} 円|" class="font-weight-bold text-right"></td>
 					</tr>
 				</table>
 			</div>

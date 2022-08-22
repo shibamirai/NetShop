@@ -28,6 +28,11 @@ public class ItemServiceImpl implements ItemService {
 	public Item get(int id) {
 		return itemMapper.selectOne(id);
 	}
+
+	@Override
+	public List<Item> get(Integer[] ids) {
+		return itemMapper.selectMany(ids);
+	}
 	
 	@Override
 	public int getStockQuantity(int id) {

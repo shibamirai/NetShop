@@ -45,4 +45,26 @@
 	and
 		items.id = #{id}
   </select>
+
+  <!-- 商品取得(複数件) -->
+  <select id="selectMany" resultType="Item">
+	select
+		items.id
+		, items.name
+		, items.image
+		, items.price
+		, items.description
+		, stocks.quantity as stock_quantity
+	from
+  		items
+  	join
+  		stocks
+  	on
+  		items.id = stocks.item_id
+	where
+		items.is_deleted = 0
+	<foreach item="id" collection="array" open="and items.id in (" separator="," close=")">
+		#{id}
+	</foreach>
+  </select>
 </mapper>

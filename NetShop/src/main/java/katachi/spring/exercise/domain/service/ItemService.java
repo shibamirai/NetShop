@@ -8,8 +8,10 @@ public interface ItemService {
 
 	/** 全商品情報取得 */
 	public List<Item> getAll();
-	/** 商品情報取得 */
+	/** 商品情報取得(1件) */
 	public Item get(int id);
+	/** 商品情報取得(複数) */
+	public List<Item> get(Integer[] ids);
 	/** 指定商品の在庫数取得 */
 	public int getStockQuantity(int id);
 	/** 入庫 */

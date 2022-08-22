@@ -11,4 +11,5 @@ public interface ItemMapper {
 
 	public List<Item> selectAll();
 	public Item selectOne(int id);
+	public List<Item> selectMany(Integer[] id);
 }
