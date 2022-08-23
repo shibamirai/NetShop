@@ -30,7 +30,7 @@
 							<form method="post" th:action="@{'/item/' + ${item.id}}"
 								class="form-inline align-items-center" th:object="${cartItemForm}">
 								<input type="hidden" th:field="*{id}">
-								<input type="number" class="form-control w-25"
+								<input type="number" min="0" th:max="${item.stockQuantity}" class="form-control w-25"
 										th:field="*{count}" th:errorclass="is-invalid">
 								<label class="ml-2">個</label>
 								<button name="details" class="ml-2">カートに入れる</button>

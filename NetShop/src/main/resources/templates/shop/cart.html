@@ -30,7 +30,7 @@
 							<form method="post" th:action="@{'/item/' + ${cartItem.item.id}}"
 								class="form-inline align-items-center" th:object="${cartItemForm}">
 								<input type="hidden" name="id" th:value="${cartItem.item.id}">
-								<input type="number" class="form-control w-25"
+								<input type="number" min="0" th:max="${cartItem.item.stockQuantity}" class="form-control w-25"
 										name="count" th:value="${cartItem.count}"
 										th:classappend="${(#fields.hasErrors('count') && cartItemForm.id == cartItem.item.id) || cartItem.outOfStock} ? 'is-invalid'">
 								<label class="ml-2">個</label>
